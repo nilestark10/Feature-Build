@@ -1,7 +1,8 @@
 import { Button, Flex, Box } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import FormSelect from "../../components/formComponents/FormSelect";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 import { PageNumbers } from "../../interface/home";
 import { IInterViewSettings } from "../../interface/forms";
 import {
@@ -12,7 +13,8 @@ import {
 
 const InterviewDetailsForm: React.FC<{
   handleTab: (n: PageNumbers) => void;
-}> = ({ handleTab }) => {
+  handleinterviewSettings: (n: IInterViewSettings) => void;
+}> = ({ handleTab, handleinterviewSettings }) => {
   const {
     errors,
     touched,
@@ -26,11 +28,24 @@ const InterviewDetailsForm: React.FC<{
       interviewDuration: "",
       interviewLanguage: "",
     },
+    validationSchema: Yup.object().shape({
+      interviewMode: Yup.string().required("Interview mode is required"),
+      interviewDuration: Yup.string().required(
+        "Interview duration is required"
+      ),
+      interviewLanguage: Yup.string().required(
+        "Interview language is required"
+      ),
+    }),
     onSubmit: (values) => {
       console.log({ values });
       alert("Form successfully submitted");
     },
   });
+
+  useEffect(() => {
+    handleinterviewSettings(values);
+  }, [values]);
 
   return (
     <Box width="100%" as="form" onSubmit={handleSubmit as any}>
